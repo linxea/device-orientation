@@ -82,16 +82,41 @@
         height: 20px;
         transform: rotateZ(220deg);
       }
+
+      #debug {
+        position: fixed;
+        width: 200px;
+        bottom: 0;
+        right: 0;
+        padding: 10px;
+        font-family: monospace;
+        opacity: 0;
+      }
+
+      #z-index::before {
+        content: "z: ";
+        width: 20px;
+      }
+      #y-index::before {
+        content: "y: ";
+        width: 20px;
+      }
+      #x-index::before {
+        content: "x: ";
+        width: 20px;
+      }
     </style>
   </head>
-
   <body>
     <div class="container">
       <div id="z" class="circle"></div>
-      <!--
-        <div id="x" class="arrowUpDown"></div>
-        <div id="y" class="arrowLeftRight"></div>
-      -->
+      <div id="x" class="arrowUpDown" style="display:none"></div>
+      <div id="y" class="arrowLeftRight" style="display:none"></div>
+    </div>
+    <div id="debug" onclick="handleDebug()">
+      <p id="z-index"></p>
+      <p id="x-index"></p>
+      <p id="y-index"></p>
     </div>
     <script>
       if (window.DeviceOrientationEvent) {
@@ -104,17 +129,37 @@
 
       function deviceOrientationHandler(event) {
         // rotation deg = euler angle = device to earth coordinate
-        const rotatationAroundZ = event.alpha;
-        const rotationAroundX = event.beta - 90;
-        const rotationAroundY = event.gamma + 90;
+        const rotatationAroundZ = Math.abs(Math.floor(event.alpha)); // 0 to 360
+        const rotationAroundX = Math.floor(event.beta);
+        const rotationAroundY = Math.floor(event.gamma);
 
         const z = document.getElementById("z");
         const x = document.getElementById("x");
         const y = document.getElementById("y");
+        const zIndex = document.getElementById("z-index");
+        const xIndex = document.getElementById("x-index");
+        const yIndex = document.getElementById("y-index");
 
         z.style.transform = `rotate(${rotatationAroundZ}deg)`;
         x.style.transform = `rotateX(${rotationAroundX}deg)`;
         y.style.transform = `rotateY(${rotationAroundY}deg)`;
+
+        let xUpDown = rotationAroundX > 0 ? "Head up" : "Head down";
+        if (rotationAroundX === 180) {
+          xUpDown = "Screen facing ground";
+        } else if (rotationAroundX === 0) {
+          xUpDown = "Screen facing sky";
+        }
+        const yLeftRight = rotationAroundY > 0 ? "Facing right" : "Facing left";
+
+        zIndex.innerText = rotatationAroundZ;
+        xIndex.innerText = `${rotationAroundX} ${xUpDown}`;
+        yIndex.innerText = `${rotationAroundY} ${yLeftRight}`;
+      }
+
+      function handleDebug() {
+        const debug = document.getElementById("debug");
+        debug.style.opacity = 1 - debug.style.opacity;
       }
     </script>
   </body>
