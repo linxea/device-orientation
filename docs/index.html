@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+		/>
+		<title>Device Orientation</title>
+		<style>
+			body {
+				margin: 0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.container {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 300px;
+				height: 300px;
+			}
+
+			.circle {
+				position: absolute;
+				display: flex;
+				justify-content: center;
+				height: inherit;
+				width: inherit;
+				border-radius: 300px;
+				border: 15px solid #e1e1e1;
+				transform: rotateZ(0deg);
+				opacity: 0.5;
+			}
+
+			#dot {
+				position: absolute;
+				height: 50px;
+				width: 50px;
+				top: -30px;
+				background-color: #0b0c0d;
+				border-radius: 30px;
+				content: "";
+			}
+
+			.arrowUpDown {
+				position: absolute;
+				height: inherit;
+				width: 20px;
+				background: linear-gradient(#c6ef79, #ffeeee);
+			}
+
+			.arrowUpDown::after {
+				content: "";
+				border-right: 20px solid #7f9bcc;
+				border-top: 20px solid darkseagreen;
+				position: absolute;
+				top: -10px;
+				left: -10px;
+				width: 20px;
+				height: 20px;
+				transform: rotateZ(-45deg);
+			}
+
+			.arrowLeftRight {
+				position: absolute;
+				width: inherit;
+				height: 20px;
+				background: linear-gradient(to left, #ddd6f3, #faaca8);
+			}
+
+			.arrowLeftRight::after {
+				content: "";
+				border-right: 20px solid #ff6296;
+				border-top: 20px solid #f57070;
+				position: absolute;
+				top: -10px;
+				left: -20px;
+				width: 20px;
+				height: 20px;
+				transform: rotateZ(220deg);
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container">
+			<div id="z" class="circle"><div id="dot"></div></div>
+			<div id="x" class="arrowUpDown"></div>
+			<div id="y" class="arrowLeftRight"></div>
+		</div>
+		<script>
+			if (window.DeviceOrientationEvent) {
+				window.addEventListener(
+					"deviceorientation",
+					deviceOrientationHandler,
+					false
+				);
+			}
+
+			function deviceOrientationHandler(event) {
+				// rotation deg = euler angle = device to earth coordinate
+				const rotatationAroundZ = event.alpha;
+				const rotationAroundX = event.beta - 90;
+				const rotationAroundY = event.gamma + 90;
+
+				const z = document.getElementById("z");
+				const x = document.getElementById("x");
+				const y = document.getElementById("y");
+				const dot = document.getElementById("dot");
+
+				z.style.transform = `rotate(${rotatationAroundZ}deg)`;
+				x.style.transform = `rotateX(${rotationAroundX}deg)`;
+				y.style.transform = `rotateY(${rotationAroundY}deg)`;
+				dot.style.backgroundColor = getColor();
+			}
+
+			function getColor() {
+				return (
+					"#" +
+					Math.random()
+						.toString(16)
+						.slice(2, 8)
+				);
+			}
+		</script>
+	</body>
+</html>
