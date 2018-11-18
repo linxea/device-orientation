@@ -35,12 +35,12 @@
         opacity: 0.5;
       }
 
-      #dot {
+      .circle::after {
         position: absolute;
         height: 50px;
         width: 50px;
         top: -30px;
-        background-color: #0b0c0d;
+        background-image: linear-gradient(to right, #334d50, #cbcaa5);
         border-radius: 30px;
         content: "";
       }
@@ -87,9 +87,11 @@
 
   <body>
     <div class="container">
-      <div id="z" class="circle"><div id="dot"></div></div>
-      <div id="x" class="arrowUpDown"></div>
-      <div id="y" class="arrowLeftRight"></div>
+      <div id="z" class="circle"></div>
+      <!--
+        <div id="x" class="arrowUpDown"></div>
+        <div id="y" class="arrowLeftRight"></div>
+      -->
     </div>
     <script>
       if (window.DeviceOrientationEvent) {
@@ -109,21 +111,10 @@
         const z = document.getElementById("z");
         const x = document.getElementById("x");
         const y = document.getElementById("y");
-        const dot = document.getElementById("dot");
 
         z.style.transform = `rotate(${rotatationAroundZ}deg)`;
         x.style.transform = `rotateX(${rotationAroundX}deg)`;
         y.style.transform = `rotateY(${rotationAroundY}deg)`;
-        dot.style.backgroundColor = getColor();
-      }
-
-      function getColor() {
-        return (
-          "#" +
-          Math.random()
-            .toString(16)
-            .slice(2, 8)
-        );
       }
     </script>
   </body>
